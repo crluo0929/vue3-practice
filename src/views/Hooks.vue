@@ -4,7 +4,7 @@
     </div>
 </template>
 <script>
-import {defineComponent, reactive, onMounted} from 'vue'
+import {defineComponent} from 'vue'
 import usePoint from '../hooks/usePoint'
 
 export default defineComponent({

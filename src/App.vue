@@ -10,15 +10,31 @@
   <div class="content">
     <router-view/>
   </div>
-  
+  <Loading :control="control" :text="label" />
 </template>
+<script lang="ts">
+import { defineComponent, provide, ref } from 'vue'
+import Loading from './components/Loading.vue'
+import useLoading from './hooks/useLoading'
+
+export default defineComponent({
+    name: 'App',
+    components:{ Loading },
+    setup(){
+      let {control,label} = useLoading()
+      return{
+        control,label
+      }
+    }
+})
+</script>
 
 <style>
 *{
   margin: 0px 0px;
 }
 button.btn{
-  border-radius: 18px;
+  border-radius: 13px;
 }
 .header{
   display: flex;

@@ -8,9 +8,6 @@ import {defineComponent} from 'vue'
 
 export default defineComponent({
     name:'Axios',
-    setup(){
-        console.log('')
-    }
 })
 </script>
 <style>
