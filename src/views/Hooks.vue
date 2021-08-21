@@ -1,6 +1,7 @@
 <template>
     <div >
-        <h1>X位置: {{point.x}}, Y位置: {{point.y}}</h1>
+        <h1>滑鼠點擊位置</h1>
+        <h2>X: {{point.x}}, Y: {{point.y}}</h2>
     </div>
 </template>
 <script>

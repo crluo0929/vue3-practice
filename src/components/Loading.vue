@@ -37,12 +37,15 @@ export default defineComponent({
     display: none;
 }
 .loading{
-    display: flex;
-    max-width: 10%;
-    height: 70vh;
-    margin: auto;
+    position:fixed;
+    left: 45%;
+    top: 45%;
+    /* display: flex; */
+    /* max-width: 10%; */
+    /* height: 30vh; */
+    /* margin: auto;
     align-items: center;
-    justify-content: center;
+    justify-content: center; */
 }
 .loading div{
     z-index : 2000;
