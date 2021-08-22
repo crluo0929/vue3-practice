@@ -4,7 +4,6 @@
         <router-link to="/">Home</router-link>
         <router-link to="/hooks">Hooks</router-link>
         <router-link to="/axios">Axios</router-link>
-        <router-link to="/about">About</router-link>
     </nav>
   </div>
   <div class="content">
@@ -13,7 +12,7 @@
   <Loading :control="control" :text="label" />
 </template>
 <script lang="ts">
-import { defineComponent, provide, ref } from 'vue'
+import { defineComponent } from 'vue'
 import Loading from './components/Loading.vue'
 import useLoading from './hooks/useLoading'
 

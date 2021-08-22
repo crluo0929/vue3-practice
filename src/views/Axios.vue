@@ -13,6 +13,12 @@
         provider: {{authInfo?.data?.provider}}<br>
         token: {{authInfo?.data?.credentials.token}}<br>
         <hr>
+        <button class="btn btn-primary" @click="getUserInfo">Async await</button><br>
+        user info:<br>
+        name : {{ userInfo?.userName }}<br>
+        city : {{ userInfo?.city }}<br>
+        Promise : {{ userInfo?.result }}<br>
+        <hr>
         <button class="btn btn-primary" @click="addInterceptor">加入Interceptor</button>
     </div>
 </template>
@@ -45,6 +51,25 @@ export default defineComponent({
             })
             .catch(err => console.log(err))
         }
+        //async getUserInfo
+        let userInfo = reactive({})
+        async function getUserInfo(){
+            try{
+                console.log('getUserInfo')
+                let userData = await api.get("/name/random_name")
+                userInfo.userName = userData.data.name
+                let addrData = await api.get("/address/random_address")
+                userInfo.city = addrData.data.city
+                let result = await new Promise((resolve, reject)=>{
+                    setTimeout(()=>{ //因為不是axios，所以不會有interceptor效果
+                        resolve('查詢完畢 '+new Date().toLocaleTimeString() )
+                    }, 1000)
+                })
+                userInfo.result = result
+            }catch(err){
+                console.log(err)
+            }
+        }
         //add interceptor
         const Loading = inject('Loading') 
         function addInterceptor(){
@@ -70,6 +95,7 @@ export default defineComponent({
         return {
             appList, randomApp, 
             authInfo, randomAuth,
+            userInfo, getUserInfo,
             addInterceptor
         }
 
