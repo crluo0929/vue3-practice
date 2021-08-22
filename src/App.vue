@@ -4,6 +4,7 @@
         <router-link to="/">Home</router-link>
         <router-link to="/hooks">Hooks</router-link>
         <router-link to="/axios">Axios</router-link>
+        <router-link to="/state">State</router-link>
     </nav>
   </div>
   <div class="content">
@@ -57,5 +58,8 @@ button.btn{
 }
 .content{
   margin: 15px 25px;
+}
+.margin5{
+  margin: 5px;
 }
 </style>

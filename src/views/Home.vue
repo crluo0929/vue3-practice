@@ -1,10 +1,10 @@
 <template>
   <div class="home">
-    <div class="test">
+    <div class="margin5">
       測試對畫框 <button class="btn btn-primary" @click="click">彈出對話框</button>
       <Dialog title="title" content="content" :isActive="show" @close="show=false" />
     </div>
-    <div class="test">
+    <div class="margin5">
       測試Loading <button class="btn btn-primary" @click="loading">顯示讀取</button>
     </div>
   </div>
@@ -41,7 +41,5 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-.test{
-  margin: 5px;
-}
+
 </style>
