@@ -3,6 +3,7 @@ import axios from 'axios'
 import personStore from './personStore'
 
 export default createStore({
+  // strict: true,  //don't use it in production mode
   state: {
     count : 1,
     randomList:[1] as number[]

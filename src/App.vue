@@ -6,6 +6,7 @@
         <router-link to="/axios">Axios</router-link>
         <router-link to="/state">State</router-link>
         <router-link to="/multistore">MultiStore</router-link>
+        <router-link to="/leaflet">Leaflet</router-link>
     </nav>
   </div>
   <div class="content">

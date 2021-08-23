@@ -4,6 +4,7 @@ import Hooks from '../views/Hooks.vue'
 import Axios from '../views/Axios.vue'
 import State from '../views/State.vue'
 import MultiStore from '../views/MultiStore.vue'
+import Leaflet from '../views/Leaflet.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -30,6 +31,12 @@ const routes: Array<RouteRecordRaw> = [
     path: '/multistore',
     name: 'MultiStore',
     component: MultiStore
+  },
+  {
+    path: '/leaflet',
+    name: 'Leaflet',
+    // component: import(/* webpackChunkName: "leaflet" */ '../views/Leaflet.vue'),
+    component: Leaflet
   },
 ]
 
