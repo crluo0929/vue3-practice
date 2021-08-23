@@ -1,5 +1,7 @@
 import { createStore } from 'vuex'
 import axios from 'axios'
+import personStore from './personStore'
+
 export default createStore({
   state: {
     count : 1,
@@ -15,7 +17,6 @@ export default createStore({
         params : { size : data_counts }
       })
         .then(resp=>{
-          console.log(resp.data)
           context.commit('ADD_NUMBER',resp.data[0].non_zero_number)
         })
         .catch(err=>{console.log(err)})
@@ -41,5 +42,6 @@ export default createStore({
     }
   },
   modules: {
+    personStore
   }
 })

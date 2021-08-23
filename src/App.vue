@@ -5,6 +5,7 @@
         <router-link to="/hooks">Hooks</router-link>
         <router-link to="/axios">Axios</router-link>
         <router-link to="/state">State</router-link>
+        <router-link to="/multistore">MultiStore</router-link>
     </nav>
   </div>
   <div class="content">

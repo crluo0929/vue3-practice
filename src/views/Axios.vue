@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>This is Axios Page</h1>
+        <h1>Axios</h1>
         <button class="btn btn-primary" @click="randomApp">GET: /app/random_app</button><br>
         app info:
         <ul>
@@ -55,7 +55,6 @@ export default defineComponent({
         let userInfo = reactive({})
         async function getUserInfo(){
             try{
-                console.log('getUserInfo')
                 let userData = await api.get("/name/random_name")
                 userInfo.userName = userData.data.name
                 let addrData = await api.get("/address/random_address")

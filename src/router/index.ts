@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import Hooks from '../views/Hooks.vue'
 import Axios from '../views/Axios.vue'
 import State from '../views/State.vue'
+import MultiStore from '../views/MultiStore.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -24,6 +25,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/state',
     name: 'State',
     component: State
+  },
+  {
+    path: '/multistore',
+    name: 'MultiStore',
+    component: MultiStore
   },
 ]
 
