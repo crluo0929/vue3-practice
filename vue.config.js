@@ -1,12 +1,13 @@
 module.exports ={
-    devServer : {
-        proxy : {
-            '/csrng' : {  
-                target : "https://csrng.net",
-                ws: true,
-                pathRewrite : { '^/csrng':  '/csrng' },
-                changeOrigin: true
-            }
-        }
-    }
+    // devServer : {
+    //     disableHostCheck: true,
+    //     proxy : {
+    //         '/integers' : {  
+    //             target : "https://www.random.org",
+    //             // ws: true,
+    //             pathRewrite : { '^/integers':  '/integers' },
+    //             changeOrigin: true
+    //         }
+    //     }
+    // }
 }
