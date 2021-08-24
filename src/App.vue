@@ -38,6 +38,11 @@ export default defineComponent({
 button.btn{
   border-radius: 13px;
 }
+button.btn:hover{
+  background-color: rgb(255, 193, 7);
+  border-color: rgb(255, 193, 7);
+  color: black;
+}
 .header{
   display: flex;
   background-color: #000;

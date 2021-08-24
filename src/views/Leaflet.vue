@@ -37,6 +37,7 @@ export default defineComponent({
     setup(){
         let map:any = reactive({})
         let showMenu = ref(false)
+        
         let offcanvasClass = reactive({'show': false })
         let offcanvasStyle = reactive({'visibility' : 'hidden' })
         function openMenu(){
@@ -92,5 +93,8 @@ export default defineComponent({
     position:absolute;
     top: 150px;
     z-index: 500;
+}
+.offcanvas-start{
+    width : 450px;
 }
 </style>
