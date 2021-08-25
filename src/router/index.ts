@@ -5,6 +5,7 @@ import Axios from '../views/Axios.vue'
 import State from '../views/State.vue'
 import MultiStore from '../views/MultiStore.vue'
 import Leaflet from '../views/Leaflet.vue'
+import Proj4js from '../views/Proj4js.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -37,6 +38,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Leaflet',
     // component: import(/* webpackChunkName: "leaflet" */ '../views/Leaflet.vue'),
     component: Leaflet
+  },
+  {
+    path: '/proj4js',
+    name: 'Proj4js',
+    // component: import(/* webpackChunkName: "leaflet" */ '../views/Leaflet.vue'),
+    component: Proj4js
   },
 ]
 
