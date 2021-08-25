@@ -10,18 +10,9 @@
         </div>
         <div class="offcanvas-body">
             <div>
-            Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
+                目前座標: X: {{aimCoord.lat}}, Y: {{aimCoord.lng}}
             </div>
-            <div class="dropdown mt-3">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton">
-                Dropdown button
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
-            </div>
+            
         </div>
     </div>
     
@@ -54,7 +45,10 @@ export default defineComponent({
             
         }
 
+        let aimCoord:any = reactive({x:25.05229843496652,y:121.54982723069188})
+
         onMounted(()=>{
+
             map = L.map('mapid').setView([25.05229843496652, 121.54982723069188], 13)
             const mapLayers = { 
                 TGOS : L.tileLayer('https://wmts.nlsc.gov.tw/wmts/EMAP/default/EPSG:3857/{z}/{y}/{x}', {
@@ -62,23 +56,29 @@ export default defineComponent({
                 })
             }
             mapLayers.TGOS.addTo(map)
-            L.marker(
+
+            let aim = L.marker(
                 map.getCenter(),{
                     icon : L.icon({
-                        // iconUrl: require('@/assets/marker.png'),
-                        iconUrl: require('../assets/marker.png'),
+                        iconUrl: require('../assets/aim.png'),
                         iconSize: [48, 48],
                         iconAnchor: [24, 48]
                     }),
-                    zIndexOffset: 1000
+                    zIndexOffset: 1000,
+                    draggable: true,
+                    opacity: 0.5
                 }
-                
-                
-            ).addTo(map);
+            )
+            aim.addEventListener('moveend', (e)=>{ 
+                aimCoord.lat = e.target._latlng.lat
+                aimCoord.lng = e.target._latlng.lng
+            })
+            aim.addTo(map);
+
         })
 
         return {
-            offcanvasClass, offcanvasStyle, map,openMenu,closeMenu
+            offcanvasClass, offcanvasStyle, map,openMenu,closeMenu, aimCoord
         }
     }
     
