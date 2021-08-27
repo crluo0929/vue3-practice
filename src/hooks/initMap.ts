@@ -1,10 +1,8 @@
 import L from 'leaflet'
 import { reactive } from 'vue'
-export default function(drawnItems:any){
+export default function(drawnItems:any, aimCoord:any){
 
     let map:any = null 
-    const aimCoord:any = reactive({latX:25.05229843496652,lngY:121.54982723069188})
-
 
     const openstreet = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png ', {
             attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
@@ -39,15 +37,15 @@ export default function(drawnItems:any){
     )
     marker.bindPopup('hello').openPopup();
     marker.on('dragend',(e)=>{
-        aimCoord.latX = e.target._latlng.lat
-        aimCoord.lngY = e.target._latlng.lng
-        marker.setPopupContent(`現在座標位置:[ ${aimCoord.latX} , ${aimCoord.lngY} ]`)
+        aimCoord.lngX = e.target._latlng.lng
+        aimCoord.latY = e.target._latlng.lat
+        marker.setPopupContent(`現在座標位置(經度,緯度):[ ${aimCoord.lngX} , ${aimCoord.latY} ]`)
         map.setView(L.latLng(e.target._latlng.lat,e.target._latlng.lng))
     })
     marker.addTo(map)
     drawnItems.addLayer(marker)
     
-    //圓形
+    //圓形(緯經度)
     const circle = L.circle(
         [25.069895471987962, 121.53895854949951],   // 圓心座標
         500,                // 半徑（公尺）
@@ -60,7 +58,7 @@ export default function(drawnItems:any){
     circle.addTo(map);
     drawnItems.addLayer(circle)
 
-    //多邊形
+    //多邊形(緯經度)
     const latlngs:any = [[25.0527904410819, 121.51187896728517],
         [25.036927279240775, 121.50449752807619],
         [25.02619515335593, 121.52698516845705],
@@ -70,7 +68,7 @@ export default function(drawnItems:any){
     polygon.addTo(map)
     drawnItems.addLayer(polygon)
 
-    //線段
+    //線段(緯經度)
     const polyline = L.polyline([
         [25.036616216339418, 121.54312133789064],
         [25.034438753943654, 121.55530929565431],
@@ -80,7 +78,7 @@ export default function(drawnItems:any){
     polyline.addTo(map)
     drawnItems.addLayer(polyline)
 
-    //矩形
+    //矩形(緯經度)
     const bounds:any = [[25.062120753958837, 121.56543731689455], [25.050457751876504, 121.5835475921631]];
     const rectangle = L.rectangle(bounds, {color: "gray", weight: 1})
     rectangle.addTo(map);
@@ -88,8 +86,7 @@ export default function(drawnItems:any){
 
 
     return {
-        _map : map ,
-        _aimCoord : aimCoord
+        _map : map
     }
 
 }

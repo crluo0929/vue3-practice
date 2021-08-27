@@ -2,8 +2,8 @@
     <div>
         
         <div class="margin5">
-            緯度(lat/x): <input type="text" v-model="coordinate.latX" />，&nbsp;
-            經度(lng/y): <input type="text" v-model="coordinate.lngY" />
+            經度(lng/x): <input type="text" v-model="coordinate.lngX" />，&nbsp;
+            緯度(lat/y): <input type="text" v-model="coordinate.latY" />
         </div>
         <!-- <button class="btn btn-primary" @click="init">測試資料</button> -->
 
@@ -20,11 +20,11 @@
             <option value="EPSG:3826">EPSG:3826(TWD97 二度分帶-台灣)</option>
         </select>
         &nbsp;&nbsp;
-        <button class="btn btn-primary" @click="transform(sourceSelect,targetSelect,coordinate.latX,coordinate.lngY)">轉換</button><br><br>
+        <button class="btn btn-primary" @click="transform(sourceSelect,targetSelect,coordinate.lngX,coordinate.latY)">轉換</button><br><br>
         <hr>
         轉換結果:<br>  
-        緯度(X): {{result.latX}}<br>
-        經度(Y): {{result.lngY}}
+        經度(X): {{result.lngX}}<br>
+        緯度(Y): {{result.latY}}
     </div>
 </template>
 <script lang="ts">

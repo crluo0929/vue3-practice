@@ -11,10 +11,10 @@ export default function(){
     const TWD97_Penghu = Proj4js.Proj('EPSG:3825')
     const WGS84 = Proj4js.Proj('EPSG:4326')
 
-    const coordinate = reactive({latX:'', lngY:''})  //原始座標
+    const coordinate = reactive({lngX:'', latY:''})  //原始座標
     const sourceSelect = ref('EPSG:3826')  //預設來源座標系統
     const targetSelect = ref('EPSG:4326')  //轉換目標座標系統
-    const result = reactive({latX:'',lngY:''})  //轉換結果座標
+    const result = reactive({lngX:'',latY:''})  //轉換結果座標
 
     function transform(source:string, target:string, sourceX:any, sourceY:any){
         let s = null, t=null;
@@ -28,9 +28,10 @@ export default function(){
 
         const p = [parseFloat(sourceX) , parseFloat(sourceY)]
         const ret = Proj4js.transform(s, t, p);
-        result.latX = ret.x
-        result.lngY = ret.y
-        console.log(result)
+        result.lngX = ret.x
+        result.latY = ret.y
+        
+        return {lngX : ret.x, latY : ret.y}
     }
 
     return {

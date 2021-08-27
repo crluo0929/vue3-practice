@@ -20,7 +20,8 @@
         </div>
         <div class="offcanvas-body">
             <div>
-                <b>目前座標:</b> X: {{aimCoord.latX}}, Y: {{aimCoord.lngY}}
+                <b>目前座標(經度x, 緯度y)</b><br> 
+                {{aimCoord.lngX}}, {{aimCoord.latY}}
             </div>
             <hr>
             <div>
@@ -40,14 +41,36 @@
                 <button class="btn btn-primary btn-sm" @click="showDrawItems">顯示/隱藏</button>
             </div>
             <hr>
-            
+            <div>
+                <b>地圖定位</b><br>
+                <div class="margin5">
+                    <label>移動到</label> <input type='text' placeholder="(經度,緯度)" size="25" v-model="toPoint" /> 
+                    <button class="btn btn-primary btn-sm" @click="moveTo">移動</button>
+                </div>
+                <div class="margin5">
+                    <label>地址定位</label> <input type='text' placeholder="輸入地址" size="25" v-model="address" /> 
+                    <button class="btn btn-primary btn-sm" @click="addrLocate">定位</button>
+                </div>
+                <div class="margin5">
+                    <label>地標定位</label> <input type='text' placeholder="輸入地標" size="25" v-model="poi" /> 
+                    <button class="btn btn-primary btn-sm" @click="poiLocate">定位</button>
+                </div>
+                <div class="margin5">
+                    <label>行政區定位</label> <input type='text' placeholder="輸入行政區" size="25" v-model="district"/> 
+                    <button class="btn btn-primary btn-sm" @click="districtLocate">定位</button>
+                </div>
+                <div class="margin5">
+                    <label>道路定位</label> <input type='text' placeholder="輸入道路" size="25" v-model="road"/> 
+                    <button class="btn btn-primary btn-sm">定位</button>
+                </div>
+            </div>
         </div>
     </div>
     
 
 </template>
 <script lang="ts">
-import { defineComponent,reactive,onMounted, ref } from 'vue'
+import { defineComponent,reactive,onMounted, ref,toRaw } from 'vue'
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-draw/dist/leaflet.draw.css'
 import L from 'leaflet'
@@ -55,19 +78,15 @@ import 'leaflet-draw'
 import Panel from '../components/Panel.vue'
 import initMap from '../hooks/initMap'
 import useLeftMenu from '../hooks/useLeftMenu'
-
+import useCoordTrans from '../hooks/useCoordTrans'
+declare var TGOS:any;
 export default defineComponent({
     name: 'Leaflet',
     components:{Panel},
     setup(){
         let map:any = null
-        let aimCoord:any = reactive({latX:25.05229843496652,lngY:121.54982723069188}) //marker point
-
-        //定位相關
-        let address:any = ref('') //地址定位
-        let poi:any = ref('') //地標定位
-        let district:any = ref('') //行政區定位
-        let road:any = ref('') //道路定位
+        //lngX 為經度, latY為緯度
+        let aimCoord:any = reactive({lngX:121.54982723069188,latY:25.05229843496652}) //marker point
 
         //左邊選單
         let {offcanvasClass,offcanvasStyle,openMenu,closeMenu} = useLeftMenu()
@@ -81,11 +100,11 @@ export default defineComponent({
         let drawInfo:any = reactive([]) //圖形資訊
         let showDrawInfo:any = ref(false)
 
-        //畫圓
+        //畫圓(緯經度)
         function drawCircle(){
             console.log(radius.value)
             let circle = L.circle(
-                [aimCoord.latX, aimCoord.lngY],   // 圓心座標
+                [aimCoord.latY,aimCoord.lngX,],   // 圓心座標
                 radius.value, // 半徑（公尺）
                 {
                     color: 'yellow',      // 線條顏色
@@ -176,10 +195,117 @@ export default defineComponent({
             })
         }
 
+        //定位相關
+        let toPoint:any = ref('')
+        let address:any = ref('') //地址定位
+        let poi:any = ref('') //地標定位
+        let district:any = ref('') //行政區定位
+        let road:any = ref('') //道路定位
+        let {transform} = useCoordTrans()
+
+        function moveTo(){
+            //經度,緯度
+            const p = toPoint.value.trim().split(',')
+            if(p.length!=2) return
+            to(parseFloat(p[0]),parseFloat(p[1]))
+        }
+
+        //移動(經度,緯度)
+        function to(lngX:any, latY:any){ 
+            
+            //傳進去要改成緯度,經度
+            const latlng = L.latLng(latY,lngX)
+            const marker = L.marker(
+                latlng,
+                {
+                    icon : L.icon({
+                        iconUrl : require('../assets/marker2.png'),
+                        iconSize: [48, 48],
+                        iconAnchor: [24, 48]
+                    }),
+                }
+            )
+            marker.addTo(map)
+            drawnItems.addLayer(marker)
+            map.setView(latlng,17)
+        }
+
+        //地址定位
+        function addrLocate(){
+            let LService = new TGOS.TGLocateService();
+            let request = {	 //設定定位所需的參數, 使用address進行地址定位
+            address: address.value
+            }
+            LService.locateTWD97(request, (result:any, status:any)=>{	//進行定位查詢, 並指定回傳資訊為TWD97坐標系統
+                if(status != 'OK'){
+                    alert(status)
+                    return
+                }
+                let loc = result[0].geometry.location
+                let ret:any = transform('EPSG:3826','EPSG:4326',loc.x,loc.y)
+                //經度,緯度
+                to(ret.lngX,ret.latY)
+
+            })
+        }
+
+        //地標定位
+        function poiLocate(){
+            let LService = new TGOS.TGLocateService();
+            let request = {				//設定定位所需的參數, 使用address進行地址定位
+                poi: poi.value
+            }
+            LService.locateTWD97(request, (result:any, status:any)=>{	//進行定位查詢, 並指定回傳資訊為TWD97坐標系統
+                if(status != 'OK'){
+                alert(status)
+                return
+                }
+                let loc = result[0].geometry.location;
+                let ret:any = transform('EPSG:3826','EPSG:4326',loc.x,loc.y)
+                //經度,緯度
+                to(ret.lngX,ret.latY)
+
+            })
+        }
+
+        //行政區定位
+        function districtLocate(){
+            let LService = new TGOS.TGLocateService();
+            let request = {				//設定定位所需的參數, 使用address進行地址定位
+            district: district.value
+            }
+            LService.locateTWD97(request, (result:any, status:any)=>{	//進行定位查詢, 並指定回傳資訊為TWD97坐標系統
+                if(status != TGOS.TGLocatorStatus.OK){
+                alert(status)
+                return
+                }
+                let loc = result[0].geometry.location;
+                let ret:any = transform('EPSG:3826','EPSG:4326',loc.x,loc.y)
+                //經度,緯度
+                to(ret.lngX,ret.latY)
+
+                // map.fitBounds(result[0].geometry.viewport)
+                // map.setZoom(map.getZoom()-1)
+                // let polygon = new TGOS.TGFill(map,result[0].geometry.geometry,{
+                // fillColor: '#00AAAA',
+                //             fillOpacity: 0.2,
+                //             strokeColor: '#009090',
+                //             strokeWeight: 5,
+                //             strokeOpacity: 1
+                // })
+                const ployPoints:any = (result[0].geometry.geometry.ext_.linestring.path as any[])
+                    .map(p => transform('EPSG:3826','EPSG:4326',p.x,p.y))
+                    .map(p => [p?.latY, p?.lngX])
+                const polygon = L.polygon([...ployPoints], {color: 'green'})
+                polygon.addTo(map)
+                drawnItems.addLayer(polygon)
+                
+            })
+        }
+
         onMounted(()=>{
-            let { _map, _aimCoord } = initMap(drawnItems)
+            let { _map } = initMap(drawnItems,aimCoord)
             map = _map
-            aimCoord = _aimCoord
         })
 
         return {
@@ -188,7 +314,7 @@ export default defineComponent({
             drawCircle,radius,
             createDrawTool,dropDrawTool,
             showDrawItems,drawInfo,showDrawInfo,
-            address,poi,district,road
+            toPoint,address,poi,district,road,moveTo,addrLocate,poiLocate,districtLocate
         }
 
     }
