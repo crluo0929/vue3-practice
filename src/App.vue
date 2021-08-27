@@ -8,7 +8,7 @@
         <router-link to="/multistore">MultiStore</router-link>
         <router-link to="/proj4js">Proj4js</router-link>
         <router-link to="/leaflet">Leaflet</router-link>
-        
+        <router-link to="/routes">Routes</router-link>
     </nav>
   </div>
   <div class="content">
@@ -36,6 +36,7 @@ export default defineComponent({
 <style>
 *{
   margin: 0px 0px;
+  font-family:微軟正黑體;
 }
 button.btn{
   border-radius: 13px;
