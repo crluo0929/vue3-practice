@@ -4,11 +4,12 @@ export default function(drawnItems:any, aimCoord:any){
 
     let map:any = null 
 
-    const openstreet = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png ', {
-            attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
-    })
     const tgos= L.tileLayer('https://wmts.nlsc.gov.tw/wmts/EMAP/default/EPSG:3857/{z}/{y}/{x}', {
             attribution: '&copy; <a href="https://www.tgos.tw/tgos/web/tgos_home.aspx">TGOS</a>'
+    })
+
+    const openstreet = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png ', {
+            attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
     })
 
     map = L.map('mapid',{

@@ -88,7 +88,7 @@ export default defineComponent({
                     return Promise.reject(err)
                 }
             )
-            alert('新增成功')
+            alert('新增成功，接下來呼叫都會加入Loading畫面了')
         }
 
         return {
