@@ -93,6 +93,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'favorite',
         props: true,
         component: ()=>import(/* webpackChunkName: "favorite" */ '../subviews/Child7View.vue')
+      },
+      {
+        path: 'online',
+        name: 'online',
+        component: ()=>import(/* webpackChunkName: "online" */ '../subviews/Child8View.vue')
       }
     ]
   },

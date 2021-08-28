@@ -11,7 +11,7 @@ const app = createApp(App)
         mounted(el,binding){
             el.onmouseenter = ()=>{
                 const span:any = document.createElement("span")
-                span.style="position:absolute;background-color:#fdeca6;color:black;font-size:14px;border:1px solid gray"
+                span.style="position:relative;float:right;background-color:white;color:black;font-size:14px;border:1px solid gray"
                 span.innerText = binding.value ? binding.value : '沒有補充資訊'
                 el.append(span)
             }

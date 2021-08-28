@@ -46,13 +46,23 @@
                         <span @click="programRoute" v-alt="'使用程式控制路由'">我的最愛</span>
                     </div>
                     <div class="item">
+                        <!-- 在route-view加上keep-alive -->
+                        <i class="fab fa-line fa-2x" style="position:relative;top:3px;"></i>&nbsp;
+                        <router-link to="/routes/online" v-alt="'在route-view加上keep-alive'" >線上通訊</router-link>
+                    </div>
+                    <div class="item">
                         <i class="fas fa-bell fa-2x" style="position:relative;top:3px;"></i>&nbsp;
                         <span @click="openMenu">設定參數</span>
                     </div>
                 </div>
             </div>
             <div class="contentChild col-10">
-                <router-view/>
+                <!-- <router-view/> -->
+                <router-view v-slot="{ Component }">
+                    <keep-alive include="Child8View">
+                        <component :is="Component" />
+                    </keep-alive>
+                </router-view>
             </div>
             <div class="offcanvas offcanvas-start" :class="offcanvasClass" :style="offcanvasStyle" tabindex="-1" id="offcanvas">
                 <div class="offcanvas-header">
@@ -109,8 +119,8 @@
 import { defineComponent,reactive,ref,toRaw } from 'vue'
 import fontawesome from '@fortawesome/fontawesome'
 import { faUser,faBell,faMap,faPhone,faStore,faQuestionCircle,faHeart } from '@fortawesome/fontawesome-free-solid'
-import { faVuejs,faCcVisa } from '@fortawesome/fontawesome-free-brands'
-fontawesome.library.add(faUser,faBell,faMap,faVuejs,faCcVisa,faPhone,faStore,faQuestionCircle,faHeart)
+import { faVuejs,faCcVisa,faLine } from '@fortawesome/fontawesome-free-brands'
+fontawesome.library.add(faUser,faBell,faMap,faVuejs,faCcVisa,faLine,faPhone,faStore,faQuestionCircle,faHeart)
 import useLeftMenu from '../hooks/useLeftMenu'
 import { useRouter } from 'vue-router'
 export default defineComponent({
