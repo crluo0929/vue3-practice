@@ -11,37 +11,41 @@
                     <div class="item">
                         <i class="fas fa-user fa-2x" style="position:relative;top:3px;"></i>&nbsp;
                         <!-- 在網址上以query的方式帶參數 -->
-                        <router-link to="/routes/profile?name='Mike'&phone='0988123456'" >個人檔案</router-link>
+                        <router-link to="/routes/profile?name='Mike'&phone='0988123456'" v-alt="'在網址上以query的方式帶參數'">個人檔案</router-link>
                     </div>
                     <div class="item">
                         <i class="fas fa-store fa-2x" style="position:relative;top:3px;"></i>&nbsp;
                         <!-- 綁定屬性帶query參數 -->
-                        <router-link :to="goOrderinfo" >訂單資訊</router-link>
+                        <router-link :to="goOrderinfo" v-alt="'綁定屬性帶query參數'">訂單資訊</router-link>
                     </div>
                     <div class="item">
                         <i class="fas fa-map fa-2x" style="position:relative;top:3px;"></i>&nbsp;
                         <!-- 使用'mapinfo/:x/:y'路徑帶參數 -->
                         <!-- <router-link to="/routes/mapinfo/302208.70/2770998.84" >地圖資訊</router-link> -->
                         <!-- 使用'mapinf/:x/:y'路徑帶參數，使用綁定方式與`coord.x`方式取得屬性 -->
-                        <router-link :to="`/routes/mapinfo/${coord.x}/${coord.y}`" >地圖資訊</router-link>
+                        <router-link :to="`/routes/mapinfo/${coord.x}/${coord.y}`" v-alt="'使用\'mapinfo/:x/:y\'路徑帶參數，使用綁定方式取得屬性'">地圖資訊</router-link>
                     </div>
                     <div class="item">
                         <i class="fas fa-question-circle fa-2x" style="position:relative;top:3px;"></i>&nbsp;
                         <!-- 綁定屬性帶param參數 -->
-                        <router-link :to="goHelpCenter" >客服中心</router-link>
+                        <router-link :to="goHelpCenter" v-alt="'綁定屬性帶param參數'">客服中心</router-link>
                     </div>
                     <div class="item">
                         <!-- 使用props帶params參數 -->
                         <i class="fab fa-cc-visa fa-2x" style="position:relative;top:3px;"></i>&nbsp;
-                        <router-link :to="goPayment" >刷卡付費</router-link>
+                        <router-link :to="goPayment" v-alt="'使用props帶params參數'">刷卡付費</router-link>
                     </div>
                     <div class="item">
                         <!-- 使用props帶query參數 -->
                         <i class="fas fa-phone fa-2x" style="position:relative;top:3px;"></i>&nbsp;
-                        <router-link :to="goContact" >連絡我們</router-link>
+                        <router-link :to="goContact" v-alt="'使用props帶query參數'" >連絡我們</router-link>
                     </div>
                     <div class="item">
-                        <!-- 使用props帶query參數 -->
+                        <!-- 使用程式控制路由 -->
+                        <i class="fas fa-heart fa-2x" style="position:relative;top:3px;"></i>&nbsp;
+                        <span @click="programRoute" v-alt="'使用程式控制路由'">我的最愛</span>
+                    </div>
+                    <div class="item">
                         <i class="fas fa-bell fa-2x" style="position:relative;top:3px;"></i>&nbsp;
                         <span @click="openMenu">設定參數</span>
                     </div>
@@ -102,18 +106,20 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent,reactive,ref,toRaw,watch } from 'vue'
+import { defineComponent,reactive,ref,toRaw } from 'vue'
 import fontawesome from '@fortawesome/fontawesome'
-import { faUser,faBell,faMap,faPhone,faStore,faQuestionCircle } from '@fortawesome/fontawesome-free-solid'
+import { faUser,faBell,faMap,faPhone,faStore,faQuestionCircle,faHeart } from '@fortawesome/fontawesome-free-solid'
 import { faVuejs,faCcVisa } from '@fortawesome/fontawesome-free-brands'
-fontawesome.library.add(faUser,faBell,faMap,faVuejs,faCcVisa,faPhone,faStore,faQuestionCircle)
+fontawesome.library.add(faUser,faBell,faMap,faVuejs,faCcVisa,faPhone,faStore,faQuestionCircle,faHeart)
 import useLeftMenu from '../hooks/useLeftMenu'
-
+import { useRouter } from 'vue-router'
 export default defineComponent({
     name : 'Routes',
     setup() {
         //左邊選單
         let {offcanvasClass,offcanvasStyle,openMenu,closeMenu} = useLeftMenu()
+        //路由器
+        let router  = useRouter()
 
         //訂單資訊
         let prodinfo = reactive({name:'',price:0})
@@ -166,6 +172,18 @@ export default defineComponent({
                 pay : pay
             }
         })
+        //我的最愛
+        function programRoute(){
+            //router.replace({}) 則是取代上一次瀏覽網址的歷史紀錄
+            router.push({
+                name : 'favorite',
+                params: {
+                    favname : 'google搜尋',
+                    favpath : 'http://www.google.com'
+                }
+            })
+        }
+
         //聯絡我們
         let email = ref('hello@test.com')
         let fax = ref('02-22334455')
@@ -184,7 +202,8 @@ export default defineComponent({
             coord, //地圖資訊
             who,question, //客服中心
             cardno,pay, //刷卡付費
-            email, fax //聯絡我們
+            email, fax, //聯絡我們
+            programRoute //我的最愛
 
         }
         

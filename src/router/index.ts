@@ -87,6 +87,12 @@ const routes: Array<RouteRecordRaw> = [
           }
         },
         component: ()=>import(/* webpackChunkName: "contact" */ '../subviews/Child6View.vue')
+      },
+      {
+        path: 'favorite/:favname/:favpath',
+        name: 'favorite',
+        props: true,
+        component: ()=>import(/* webpackChunkName: "favorite" */ '../subviews/Child7View.vue')
       }
     ]
   },
