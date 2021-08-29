@@ -7,6 +7,7 @@ import MultiStore from '../views/MultiStore.vue'
 // import Leaflet from '../views/Leaflet.vue'
 import Proj4js from '../views/Proj4js.vue'
 import Routes from '../views/Routes.vue'
+import Error from '../views/Error.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -130,6 +131,12 @@ const routes: Array<RouteRecordRaw> = [
         ]
       }
     ]
+  },
+  {
+    path: '/error',
+    name: 'error',
+    component: Error,
+    props: true
   },
 ]
 

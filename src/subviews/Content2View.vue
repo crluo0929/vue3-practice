@@ -37,7 +37,13 @@ export default defineComponent({
                 })
             },
             error =>{
-                alert('處理失敗，不導頁:'+error)
+                alert('處理失敗，改導去錯誤頁面:'+error)
+                next({
+                    name: 'error',
+                    params:{
+                        errorMessage : error
+                    }
+                })
             }
         )
     }
