@@ -37,7 +37,7 @@
                     </div>
                     <div class="item">
                         <!-- 使用props帶query參數 -->
-                        <i class="fas fa-phone fa-2x" style="position:relative;top:3px;"></i>&nbsp;
+                        <i class="fas fa-envelope fa-2x" style="position:relative;top:3px;"></i>&nbsp;
                         <router-link :to="goContact" v-alt="'使用props帶query參數'" >連絡我們</router-link>
                     </div>
                     <div class="item">
@@ -51,14 +51,22 @@
                         <router-link to="/routes/online" v-alt="'在route-view加上keep-alive'" >線上通訊</router-link>
                     </div>
                     <div class="item">
-                        <i class="fas fa-bell fa-2x" style="position:relative;top:3px;"></i>&nbsp;
-                        <span @click="openMenu">設定參數</span>
+                        <!-- routing guards -->
+                        <i class="fas fa-database fa-2x" style="position:relative;top:3px;"></i>&nbsp;
+                        <router-link to="/routes/database" v-alt="'routing guards'" >資料管理</router-link>
+                    </div>
+                    <div class="item">
+                        <i class="fas fa-wrench fa-2x" style="position:relative;top:3px;"></i>&nbsp;
+                        <span @click="openMenu" v-alt="'設定routes參數'">設定參數</span>
                     </div>
                 </div>
             </div>
             <div class="contentChild col-10">
                 <!-- <router-view/> -->
                 <router-view v-slot="{ Component }">
+                    <!-- 多筆寫法 -->
+                    <!-- <keep-alive include="Child8View,Child7View"> --> 
+                    <!-- <keep-alive :include="['Child8View','Child7View']"> -->
                     <keep-alive include="Child8View">
                         <component :is="Component" />
                     </keep-alive>
@@ -80,7 +88,7 @@
                         產品清單:<br>
                         <ul>
                             <li v-for="(item,index) in products" :key="index">
-                                {{item}} <button class="btn btn-danger" @click="delProd(index)">X</button>
+                                {{item}} <button class="btn btn-danger btn-sm" @click="delProd(index)">X</button>
                             </li>
                         </ul>
                     </div>
@@ -109,6 +117,13 @@
                         <label>傳真</label> <input type="text" v-model="fax" size="40">
                     </div>
                     <hr>
+                    <div>
+                        <b>sessionStorage資料</b><br>
+                        <label>key</label> <input type="text" v-model="dataKey" size="40"><br>
+                        <label>value</label> <input type="text" v-model="dataValue" size="40">
+                        <button class="btn btn-primary" @click="addSessionStorage">加入</button>
+                    </div>
+                    <hr>
 
                 </div>
             </div>
@@ -116,11 +131,11 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent,reactive,ref,toRaw } from 'vue'
+import { defineComponent,reactive,ref,toRaw,toRefs } from 'vue'
 import fontawesome from '@fortawesome/fontawesome'
-import { faUser,faBell,faMap,faPhone,faStore,faQuestionCircle,faHeart } from '@fortawesome/fontawesome-free-solid'
+import { faUser,faBell,faMap,faEnvelope,faStore,faQuestionCircle,faHeart,faWrench,faDatabase } from '@fortawesome/fontawesome-free-solid'
 import { faVuejs,faCcVisa,faLine } from '@fortawesome/fontawesome-free-brands'
-fontawesome.library.add(faUser,faBell,faMap,faVuejs,faCcVisa,faLine,faPhone,faStore,faQuestionCircle,faHeart)
+fontawesome.library.add(faUser,faBell,faMap,faVuejs,faCcVisa,faLine,faEnvelope,faStore,faQuestionCircle,faHeart,faWrench,faDatabase)
 import useLeftMenu from '../hooks/useLeftMenu'
 import { useRouter } from 'vue-router'
 export default defineComponent({
@@ -205,6 +220,14 @@ export default defineComponent({
             }
         })
 
+        //localStorage
+        let dataKey = ref('')
+        let dataValue = ref('')
+        function addSessionStorage(){
+            sessionStorage.setItem(dataKey.value,dataValue.value)
+            alert('新增成功')
+        }
+
         return {
             goOrderinfo,goHelpCenter,goPayment,goContact, //路由
             offcanvasClass,offcanvasStyle,openMenu,closeMenu, //選單項目
@@ -213,6 +236,7 @@ export default defineComponent({
             who,question, //客服中心
             cardno,pay, //刷卡付費
             email, fax, //聯絡我們
+            dataKey,dataValue,addSessionStorage, //sessionStorage
             programRoute //我的最愛
 
         }

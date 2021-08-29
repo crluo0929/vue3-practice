@@ -98,6 +98,36 @@ const routes: Array<RouteRecordRaw> = [
         path: 'online',
         name: 'online',
         component: ()=>import(/* webpackChunkName: "online" */ '../subviews/Child8View.vue')
+      },
+      {
+        path: 'database',
+        name: 'database',
+        meta: {isAuth : true},
+        component: ()=>import(/* webpackChunkName: "database" */ '../subviews/Child9View.vue'),
+        children:[
+          {
+            path: 'content1',
+            name: 'content1',
+            beforeEnter: (to,from)=>{
+              if(sessionStorage.getItem('role') != 'admin'){
+                alert('Routing Guard: 須要有admin權限\n( 請設定sessionStorage[ role=admin ] )')
+                return false
+              }
+            },
+            component: ()=>import(/* webpackChunkName: "content1" */ '../subviews/Content1View.vue')
+          },
+          {
+            path: 'content2',
+            name: 'content2',
+            meta: {errmsg: '讀取資料失敗'},
+            component: ()=>import(/* webpackChunkName: "content2" */ '../subviews/Content2View.vue')
+          },
+          {
+            path: 'content3',
+            name: 'content3',
+            component: ()=>import(/* webpackChunkName: "content3" */ '../subviews/Content3View.vue')
+          }
+        ]
       }
     ]
   },
@@ -106,6 +136,21 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+//全域的Router Guard
+//在每一次導航前執行( component 還沒被mount前)
+router.beforeEach((to,from)=>{
+  if(to.meta.isAuth){ //如果有設定要檢查權限
+    if(sessionStorage.getItem('account') != 'admin'){
+      alert('Global Routing Guard: 須要有admin帳號\n( 請設定sessionStorage[ account=admin ] )')
+      return false
+    } 
+  }
+})
+//在每一次成功導行之後執行
+router.afterEach((to,from)=>{
+  document.title = to.name as string || ''
 })
 
 export default router
