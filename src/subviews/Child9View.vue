@@ -3,13 +3,13 @@
         <h1>Routing Guards</h1>
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <router-link class="nav-link" to="/routes/database/content1">帳號設定</router-link>
+                <router-link class="nav-link" to="/routes/database/content1" v-alt="'beforeEach、beforeEnter、beforeRouteEnter'">帳號設定</router-link>
             </li>
             <li class="nav-item">
-                <router-link class="nav-link" to="/routes/database/content2">權限設定</router-link>
+                <router-link class="nav-link" to="/routes/database/content2" v-alt="'模擬beforeRouteEnter失敗'">權限設定</router-link>
             </li>
             <li class="nav-item">
-                <router-link class="nav-link" to="/routes/database/content3">其它設定</router-link>
+                <router-link class="nav-link" to="/routes/database/content3" v-alt="'onBeforeRouteLeave'">其它設定</router-link>
             </li>
         </ul>
         <div class="inner-router-view">
