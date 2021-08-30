@@ -361,7 +361,20 @@ export default defineComponent({
             if(kmlFile.value){
                 //理論上要從後端server網址下載，這裡用個假的url
                 let path = URL.createObjectURL(kmlFile.value)
-                omnivore.kml(path).addTo(map);
+                var omnivoreLayer = omnivore.kml(path)
+                //omnivore好像不支援讀取kml裡的iconStyle，所以自己設定icon...
+                .on('ready', function() {
+                    omnivoreLayer.eachLayer(function(layer:any) {
+                        if (layer instanceof L.Marker) {
+                            layer.setIcon(L.icon({
+                                iconUrl : require('../assets/marker2.png'),
+                                iconSize: [48, 48],
+                                iconAnchor: [24, 48]
+                            }));
+                        }
+                    });
+                })
+                .addTo(map);
             }
         }
         function exportKML(){
