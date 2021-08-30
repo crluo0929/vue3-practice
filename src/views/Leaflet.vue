@@ -43,26 +43,33 @@
             <hr>
             <div>
                 <b>地圖定位</b><br>
-                <div class="margin5">
-                    <label>移動到</label> <input type='text' placeholder="(經度,緯度)" size="25" v-model="toPoint" /> 
+                <div class="margin5" style="display:flex;">
+                    <label>移動到</label> <input type='text' placeholder="(經度,緯度)" style="width:75%" v-model="toPoint" /> 
                     <button class="btn btn-primary btn-sm" @click="moveTo">移動</button>
                 </div>
                 <div class="margin5">
-                    <label>地址定位</label> <input type='text' placeholder="輸入地址" size="25" v-model="address" /> 
+                    <label>地址定位</label> <input type='text' placeholder="臺北市中山區松江路469巷4號" style="width:70%" v-model="address" /> 
                     <button class="btn btn-primary btn-sm" @click="addrLocate">定位</button>
                 </div>
                 <div class="margin5">
-                    <label>地標定位</label> <input type='text' placeholder="輸入地標" size="25" v-model="poi" /> 
+                    <label>地標定位</label> <input type='text' placeholder="內政部" style="width:70%" v-model="poi" /> 
                     <button class="btn btn-primary btn-sm" @click="poiLocate">定位</button>
                 </div>
                 <div class="margin5">
-                    <label>行政區定位</label> <input type='text' placeholder="輸入行政區" size="25" v-model="district"/> 
+                    <label>行政區定位</label> <input type='text' placeholder="臺北市大安區住安里" style="width:66%" v-model="district"/> 
                     <button class="btn btn-primary btn-sm" @click="districtLocate">定位</button>
                 </div>
                 <div class="margin5">
-                    <label>道路定位</label> <input type='text' placeholder="輸入道路" size="25" v-model="road"/> 
-                    <button class="btn btn-primary btn-sm">定位</button>
+                    <label>道路定位</label> <input type='text' placeholder="臺北市中正區徐州路18巷" style="width:70%" v-model="road"/> 
+                    <button class="btn btn-primary btn-sm" @click="roadLocate">定位</button>
                 </div>
+            </div>
+            <hr>
+            <div>
+                <b>KML</b><br>
+                <label>上傳KML</label> <input type="file" name="kml" id="kml" @change="changeKmlFile">
+                <button class="btn btn-primary btn-sm" @click="loadKML">載入KML</button><br>
+                <label>下載KML</label><button class="btn btn-primary btn-sm" @click="exportKML">匯出KML</button>
             </div>
         </div>
     </div>
@@ -70,16 +77,19 @@
 
 </template>
 <script lang="ts">
-import { defineComponent,reactive,onMounted, ref,toRaw } from 'vue'
-import 'leaflet/dist/leaflet.css';
-import 'leaflet-draw/dist/leaflet.draw.css'
+import { defineComponent,reactive,onMounted, ref } from 'vue'
 import L from 'leaflet'
 import 'leaflet-draw'
+import 'leaflet/dist/leaflet.css';
+import 'leaflet-draw/dist/leaflet.draw.css'
 import Panel from '../components/Panel.vue'
 import initMap from '../hooks/initMap'
 import useLeftMenu from '../hooks/useLeftMenu'
 import useCoordTrans from '../hooks/useCoordTrans'
+import omnivore from 'leaflet-omnivore'
+
 declare var TGOS:any;
+
 export default defineComponent({
     name: 'Leaflet',
     components:{Panel},
@@ -272,18 +282,19 @@ export default defineComponent({
         function districtLocate(){
             let LService = new TGOS.TGLocateService();
             let request = {				//設定定位所需的參數, 使用address進行地址定位
-            district: district.value
+                district: district.value
             }
             LService.locateTWD97(request, (result:any, status:any)=>{	//進行定位查詢, 並指定回傳資訊為TWD97坐標系統
                 if(status != TGOS.TGLocatorStatus.OK){
-                alert(status)
-                return
+                    alert(status)
+                    return
                 }
                 let loc = result[0].geometry.location;
+                //要把TGOS API查回來的座標轉換成WGS84
                 let ret:any = transform('EPSG:3826','EPSG:4326',loc.x,loc.y)
                 //經度,緯度
                 to(ret.lngX,ret.latY)
-
+                //不可以使用TGOS的繪圖
                 // map.fitBounds(result[0].geometry.viewport)
                 // map.setZoom(map.getZoom()-1)
                 // let polygon = new TGOS.TGFill(map,result[0].geometry.geometry,{
@@ -293,6 +304,7 @@ export default defineComponent({
                 //             strokeWeight: 5,
                 //             strokeOpacity: 1
                 // })
+                //使用leaflet繪圖
                 const ployPoints:any = (result[0].geometry.geometry.ext_.linestring.path as any[])
                     .map(p => transform('EPSG:3826','EPSG:4326',p.x,p.y))
                     .map(p => [p?.latY, p?.lngX])
@@ -301,6 +313,61 @@ export default defineComponent({
                 drawnItems.addLayer(polygon)
                 
             })
+        }
+
+        //道路定位
+        function roadLocate(){
+            let LService = new TGOS.TGLocateService();
+            let request = {				//設定定位所需的參數, 使用address進行地址定位
+                roadLocation: road.value
+            }
+            LService.locateTWD97(request, (result:any, status:any)=>{	//進行定位查詢, 並指定回傳資訊為TWD97坐標系統
+                if(status != TGOS.TGLocatorStatus.OK){
+                    alert(status)
+                    return
+                }
+
+                let loc = result[0].geometry.location;
+                //要把TGOS API查回來的座標轉換成WGS84
+                let ret:any = transform('EPSG:3826','EPSG:4326',loc.x,loc.y)			//利用geometry.location取得點位(TGPoint)				//將地圖畫面縮放至第一個查詢結果的視域範圍
+                // let marker = new TGOS.TGMarker(map, loc, road.value);	//繪出定位點
+                //經度,緯度
+                to(ret.lngX,ret.latY)
+                //緯度,經度
+                const latlng = L.latLng(ret.latY,ret.lngX)
+                const marker = L.marker(
+                    latlng,
+                    {
+                        icon : L.icon({
+                            iconUrl : require('../assets/marker2.png'),
+                            iconSize: [48, 48],
+                            iconAnchor: [24, 48]
+                        }),
+                    }
+                )
+                marker.addTo(map)
+                drawnItems.addLayer(marker)
+                
+            })
+        }
+
+        //載入KML
+        let kmlFile = ref(null)
+        function changeKmlFile(e:any){
+            kmlFile.value = e.target.files[0]
+            //理論上要push到後端server
+        }
+        function loadKML(){
+            if(kmlFile.value){
+                //理論上要從後端server網址下載，這裡用個假的url
+                let path = URL.createObjectURL(kmlFile.value)
+                omnivore.kml(path).addTo(map);
+            }
+        }
+        function exportKML(){
+            // let data = drawnItems.toGeoJSON();
+            //geojson好像不支援圓形，從geoJson轉kml也沒用
+            alert('不支援')
         }
 
         onMounted(()=>{
@@ -314,7 +381,8 @@ export default defineComponent({
             drawCircle,radius,
             createDrawTool,dropDrawTool,
             showDrawItems,drawInfo,showDrawInfo,
-            toPoint,address,poi,district,road,moveTo,addrLocate,poiLocate,districtLocate
+            toPoint,address,poi,district,road,moveTo,addrLocate,poiLocate,districtLocate,roadLocate,
+            kmlFile, loadKML, changeKmlFile,exportKML
         }
 
     }

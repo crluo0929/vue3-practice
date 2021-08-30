@@ -37,7 +37,7 @@ export default defineComponent({
             baseURL : "https://random-data-api.com/api"
         })
         //導頁前先獲取資料，並準備好之後才導入
-        api.get("/users/random_user",{params : {size : 5} })
+        api.get("/users/random_user",{params : {size : 4} })
             .then(res=>{ //假設回應都是200 OK
                 let items = res.data as []
                 next((vm:any)=>{ vm.pushData(items) })
