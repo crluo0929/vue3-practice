@@ -3,6 +3,8 @@
         <h1>個人檔案</h1>
         <h2>姓名: {{name}}</h2>
         <h2>電話: {{phone}}</h2>
+        <hr>
+        {{route.fullPath}}
     </div>
 </template>
 <script lang="ts">
@@ -17,7 +19,7 @@ export default defineComponent({
         let phone = route.query.phone
 
         return {
-            name, phone
+            name, phone,route
         }
     }
 })

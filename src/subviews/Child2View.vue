@@ -8,6 +8,8 @@
                 商品名稱: {{item.name}}, 商品價格: {{item.price}}
             </li>
         </ul>
+        <hr>
+        {{route.fullPath}}
     </div>
 </template>
 <script lang="ts">
@@ -20,7 +22,7 @@ export default defineComponent({
         let orderno = route.query.orderno
         let products = reactive((route.query.products as []).map((item:any) => JSON.parse(item)))
         return {
-            orderno,products
+            orderno,products,route
         }
     },
 })

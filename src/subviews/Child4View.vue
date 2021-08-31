@@ -3,6 +3,8 @@
         <h1>客服中心</h1>
         <h2>提問者: {{who}}</h2>
         <h2>問題內容: {{question}}</h2>
+        <hr>
+        {{route.fullPath}}
     </div>
 </template>
 <script lang="ts">
@@ -16,7 +18,7 @@ export default defineComponent({
         let who = route.params.who
         let question = route.params.question
         return {
-            who,question
+            who,question, route
         }
     },
 })

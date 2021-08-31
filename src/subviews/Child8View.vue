@@ -2,7 +2,7 @@
     <div>
         <h1>線上通訊</h1>
         <div style="width:100%;height:60vh;border:1px solid gray;">
-            <p style="text-align:center;vertical-align:middle;position: relative;top:50%;">
+            <p style="text-align:center;position: relative;top:50%;">
                 在訊息框裡輸入訊息，然後切換到其它頁籤後再切回來，訊息不會被 unmounted!
             </p>
         </div><br>

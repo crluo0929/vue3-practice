@@ -3,6 +3,8 @@
         <h1>地圖資訊</h1>
         <h2>座標資訊</h2>
         <h3>x : {{x}}, y: {{y}}</h3>
+        <hr>
+        {{route.fullPath}}
     </div>
 </template>
 <script lang="ts">
@@ -15,7 +17,7 @@ export default defineComponent({
         let x = route.params.x
         let y = route.params.y
         return {
-            x,y
+            x,y, route
         }
     },
 })
